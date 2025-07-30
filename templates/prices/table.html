@@ -1,0 +1,307 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>گزارش قیمت لحظه‌ای</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    crossorigin="anonymous"
+  >
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Font Awesome -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    rel="stylesheet"
+    crossorigin="anonymous"
+  >
+
+  <!-- Vazir Font -->
+  <link
+    rel="preload"
+    href="{% static 'fonts/Vazirmatn-Regular.woff2' %}"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  >
+  <style>
+    @font-face {
+      font-family: 'Vazir';
+      src: url("{% static 'fonts/Vazirmatn-Regular.woff2' %}") format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+      a[href*="tgju.org"] {
+    display: none !important;
+  }
+    body {
+      font-family: 'Vazir', Tahoma, Arial, sans-serif;
+      background-color: #f1f3f5;
+      color: #343a40;
+      margin: 0;
+    }
+    .navbar {
+      background: linear-gradient(90deg, #002b7c, #002b7c);
+    }
+    .navbar-brand {
+      color: #fff;
+      font-size: 1.75rem;
+    }
+    .section-card {
+      border: none;
+      border-radius: .75rem;
+      overflow: hidden;
+      
+    }
+.section-header {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #002b7c;
+  padding: 0rem 0rem; /* فاصله داخلی */
+}
+.section-header i {
+  color: #ef6a2c !important;
+}
+.header-logo {
+  height: 7rem;  /* تنظیم ارتفاع لوگو */
+  width: auto;
+}
+    .section-header i {
+      margin-left: .5rem;
+    }
+    footer {
+      background-color: #fff;
+      border-top: 1px solid #dee2e6;
+      text-align: center;
+      padding: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand mx-auto" href="#">
+        <i class="fas fa-chart-line"></i> گزارش قیمت لحظه‌ای
+      </a>
+    </div>
+  </nav>
+
+  <main class="container my-5">
+    <div class="row g-4">
+
+      <!-- 1. ارزهای دیجیتال -->
+<div class="col-12 col-md-6">
+  <div class="card section-card shadow-sm">
+    <div class="card-header bg-white">
+      <div class="d-flex justify-content-between align-items-center section-header">
+        <img src="{% static 'images/logo.png' %}" alt="لوگو" class="header-logo">
+        <div class="d-flex align-items-center">
+          <i class="fab fa-bitcoin me-2"></i>
+          <span>ارزهای دیجیتال</span>
+        </div>
+        <!-- سمت راست: لوگوی دلخواه -->
+        
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <tgju
+        type="market-overview"
+        items="398096,398097,398110"
+        columns="dot"
+        token="webservice"
+      ></tgju>
+    </div>
+  </div>
+</div>
+
+
+      <!-- 2. ارزهای رایج دنیا -->
+<div class="col-12 col-md-6">
+  <div class="card section-card shadow-sm">
+    <div class="card-header bg-white">
+      <div class="d-flex justify-content-between align-items-center section-header">
+        <img src="{% static 'images/logo.png' %}" alt="لوگو" class="header-logo">
+        <div class="d-flex align-items-center">
+          <!-- عوض کنید به آیکون مناسب -->
+         <i class="fas fa-money-bill-wave me-2"></i>
+          <span>ارزهای رایج دنیا</span>
+        </div>
+        <!-- لوگوی شما یا هر آیکونی که می‌خواهید -->
+        
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <tgju
+        type="market-overview"
+        items="137203,137205,137206"
+        columns="dot"
+        token="webservice"
+      ></tgju>
+    </div>
+  </div>
+</div>
+
+<div class="col-12 col-md-6">
+  <div class="card section-card shadow-sm">
+    <div class="card-header bg-white">
+      <div class="d-flex justify-content-between align-items-center section-header">
+        <img src="{% static 'images/logo.png' %}" alt="لوگو" class="header-logo">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-coins me-2"></i>
+          <span>سکه‌ها</span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <tgju
+        type="market-overview"
+        items="137138,137137,137139,137140,137141"
+        columns="dot"
+        token="webservice"
+      ></tgju>
+    </div>
+  </div>
+</div>
+
+<div class="col-12 col-md-6">
+  <div class="card section-card shadow-sm">
+    <div class="card-header bg-white">
+      <div class="d-flex justify-content-between align-items-center section-header">
+        <img src="{% static 'images/logo.png' %}" alt="لوگو" class="header-logo">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-gem me-2"></i>
+          <span>طلا و نقره</span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <tgju
+        type="market-overview"
+        items="137119,137123,137120,137121,137122"
+        columns="dot"
+        token="webservice"
+      ></tgju>
+    </div>
+  </div>
+</div>
+
+<div class="col-12 col-md-6">
+  <div class="card section-card shadow-sm">
+    <div class="card-header bg-white">
+      <div class="d-flex justify-content-between align-items-center section-header">
+        <img src="{% static 'images/logo.png' %}" alt="لوگو" class="header-logo">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-car me-2"></i>
+          <span>قیمت خودروهای ایرانی</span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <div id="loader-cars" class="my-3 text-center">
+        <div class="spinner-border" role="status"><span class="visually-hidden">در حال بارگذاری...</span></div>
+      </div>
+      <div id="cars-table" class="visually-hidden">
+        <table class="table">
+          <thead>
+            <tr><th>نام خودرو</th><th>قیمت (تومان)</th></tr>
+          </thead>
+          <tbody id="cars-prices-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>  
+
+
+    </div>
+  </main>
+
+  <footer class="text-center py-3">
+    <small>&copy; {% now "Y" %}  کلیک | همه حقوق محفوظ است.</small>
+  </footer>
+<script>
+window.addEventListener('load', () => {
+  // حذف کامل "By" و لینک‌های TGJU هنگام لود اولیه
+  document.querySelectorAll('a[href*="tgju.org"]').forEach(a => {
+    if (a.previousSibling && a.previousSibling.nodeType === Node.TEXT_NODE) {
+      a.previousSibling.nodeValue = '';
+    }
+    a.remove();
+  });
+
+  // اضافه کردن دکمه‌ی دانلود به هر کارت
+  document.querySelectorAll('.card.section-card').forEach(card => {
+    const btn = document.createElement('button');
+    btn.textContent = 'دانلود کارت';
+    btn.className = 'btn btn-sm btn-primary mt-2';
+    card.querySelector('.card-body').appendChild(btn);
+
+btn.addEventListener('click', async () => {
+  // ۱) مخفی کردن دکمه
+  btn.style.visibility = 'hidden';
+
+  // ۲) کمی تأخیر برای رندر کامل نمودارها
+  await new Promise(r => setTimeout(r, 600));
+
+  // ۳) حذف موقت هر متن "By" درون کارت
+  const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      return /^\s*By\b/.test(node.nodeValue)
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_SKIP;
+    }
+  });
+  const toRemove = [];
+  while (walker.nextNode()) toRemove.push(walker.currentNode);
+  toRemove.forEach(txtNode => txtNode.nodeValue = '');
+
+  // ۴) تنظیم فونت دستی برای کارت
+  card.style.fontFamily = "'Vazir', Tahoma, Arial, sans-serif";
+
+  // ۵) کپچر کارت با رزولوشن بالا
+  html2canvas(card, {
+    scale: window.devicePixelRatio * 2, // یا عدد ثابت مثل 3  
+    backgroundColor: null,
+    useCORS: true,
+    allowTaint: true,
+    ignoreElements: el => el === btn
+  }).then(canvas => {
+    // ۶) بازگرداندن دکمه
+    btn.style.visibility = '';
+
+    // ۷) دانلود تصویر
+    const link = document.createElement('a');
+    const title = card
+      .querySelector('.section-header span')
+      .textContent.trim()
+      .replace(/\s+/g, '_');
+    link.download = `${title}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    console.error('خطا در کپچر کارت:', err);
+    btn.style.visibility = '';
+  });
+});
+  });
+});
+</script>
+
+
+
+
+
+
+  <!-- اسکریپت‌های لازم -->
+  <script src="https://api.tgju.org/v1/widget/v2" defer></script>
+  <script src="{% static 'prices/js/update.js' %}" defer></script>
+</body>
+</html>
