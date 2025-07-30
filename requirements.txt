@@ -3,3 +3,4 @@ requests
 beautifulsoup4
 django-celery-beat
 gunicorn
+whitenoise
