@@ -220,10 +220,10 @@ btn.addEventListener('click', async () => {
   // ۱) مخفی کردن دکمه
   btn.style.visibility = 'hidden';
 
-  // ۲) کمی تأخیر برای رندر کامل نمودارها
+  // ۲) کمی تأخیر برای رندر کامل ویجت‌ها
   await new Promise(r => setTimeout(r, 600));
 
-  // ۳) حذف موقت هر متن "By" درون کارت
+  // ۳) حذف موقت متن "By" (اگر لازم بود)
   const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
       return /^\s*By\b/.test(node.nodeValue)
@@ -235,33 +235,53 @@ btn.addEventListener('click', async () => {
   while (walker.nextNode()) toRemove.push(walker.currentNode);
   toRemove.forEach(txtNode => txtNode.nodeValue = '');
 
-  // ۴) تنظیم فونت دستی برای کارت
+  // ۴) تنظیم فونت (در صورت نیاز)
   card.style.fontFamily = "'Vazir', Tahoma, Arial, sans-serif";
 
-  // ۵) کپچر کارت با رزولوشن بالا
-  html2canvas(card, {
-    scale: window.devicePixelRatio * 2, // یا عدد ثابت مثل 3  
+  // ۵) کپچر کارت با رزولوشن کافی
+  // برای حفظ جزئیات، scale را بالاتر می‌گیریم؛ اما خروجی نهایی 1080x1080 خواهد بود.
+  const rawCanvas = await html2canvas(card, {
+    scale: Math.min(3, window.devicePixelRatio * 2),
     backgroundColor: null,
     useCORS: true,
     allowTaint: true,
     ignoreElements: el => el === btn
-  }).then(canvas => {
-    // ۶) بازگرداندن دکمه
-    btn.style.visibility = '';
-
-    // ۷) دانلود تصویر
-    const link = document.createElement('a');
-    const title = card
-      .querySelector('.section-header span')
-      .textContent.trim()
-      .replace(/\s+/g, '_');
-    link.download = `${title}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }).catch(err => {
-    console.error('خطا در کپچر کارت:', err);
-    btn.style.visibility = '';
   });
+
+  // ۶) ساخت canvas نهایی 1080x1080
+  const finalSize = 1080;
+  const squareCanvas = document.createElement('canvas');
+  squareCanvas.width = finalSize;
+  squareCanvas.height = finalSize;
+  const ctx = squareCanvas.getContext('2d');
+
+  // پس‌زمینه سفید (اگر خواستی شفاف بذاری، این خط را حذف کن)
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, finalSize, finalSize);
+
+  // محاسبه نسبت برای قرار دادن تصویر کارت داخل مربع با حفظ نسبت
+  const cw = rawCanvas.width;
+  const ch = rawCanvas.height;
+  const scale = Math.min(finalSize / cw, finalSize / ch);
+  const drawW = cw * scale;
+  const drawH = ch * scale;
+  const offsetX = (finalSize - drawW) / 2;
+  const offsetY = (finalSize - drawH) / 2;
+
+  ctx.drawImage(rawCanvas, 0, 0, cw, ch, offsetX, offsetY, drawW, drawH);
+
+  // ۷) بازگرداندن دکمه
+  btn.style.visibility = '';
+
+  // ۸) دانلود خروجی مربعی
+  const link = document.createElement('a');
+  const titleEl = card.querySelector('.section-header span');
+  const title = titleEl
+    ? titleEl.textContent.trim().replace(/\s+/g, '_')
+    : 'card';
+  link.download = `${title}_1080x1080.png`;
+  link.href = squareCanvas.toDataURL('image/png');
+  link.click();
 });
   });
 });
