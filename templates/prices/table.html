@@ -98,6 +98,18 @@
       background: rgba(255, 255, 255, 0.0);
       border-radius: 4px;
     }
+  .tgju-wrapper .custom-widget-title {
+  position: absolute;
+  top: 6px;
+  right: 6px; /* چون راست‌به‌چپ هستی، عنوان سمت راست باشه */
+  background: rgba(255,255,255,0.85);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  z-index: 10;
+  white-space: nowrap;
+}
   </style>
 </head>
 
@@ -146,6 +158,29 @@
           <div class="card-body text-center">
             <tgju type="market-overview" items="137203,137205,137206,137207,137225" columns="dot" token="webservice">
             </tgju>
+            <script src="https://api.tgju.org/v1/widget/v2" defer></script>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card section-card shadow-sm">
+          <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center section-header">
+              <div class="d-flex align-items-center">
+                <!-- عوض کنید به آیکون مناسب -->
+              </div>
+              <!-- لوگوی شما یا هر آیکونی که می‌خواهید -->
+
+            </div>
+          </div>
+          <div class="card-body text-center">
+<tgju
+	type="market-overview"
+	items="137222,137221,137217,137218,137215"
+	columns="dot"
+	token="webservice"
+></tgju>
+<script src="https://api.tgju.org/v1/widget/v2" defer></script>
             <script src="https://api.tgju.org/v1/widget/v2" defer></script>
           </div>
         </div>
@@ -202,6 +237,7 @@
 
       // اضافه کردن دکمه‌ی دانلود به هر کارت
       document.querySelectorAll('.card.section-card').forEach(card => {
+        
         const btn = document.createElement('button');
         btn.textContent = 'دانلود کارت';
         btn.className = 'btn btn-sm btn-primary mt-2';
