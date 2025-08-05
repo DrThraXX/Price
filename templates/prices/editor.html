@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>خبر ساز - کلیک</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CropperJS -->
+    <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
+
+
+    <style>
+        .hide-scrollbar {
+            scrollbar-width: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+    <div class="flex justify-between mb-0 items-center">
+
+    </div>
+    <main class="max-w-6xl mx-auto lg:mt-10 lg:mb-24 p-4 sm:p-8 bg-white rounded-2xl shadow-xl">
+        <div>
+            <a href="{% url 'prices:price_table' %}"
+                class="inline-flex items-center gap-2 text-sm px-3 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">
+                ← بازگشت به جدول قیمت‌ها
+            </a>
+        </div>
+        <div class="flex justify-center mb-0">
+            <img src="{% static 'assets/logo/logo.png' %}" alt="Logo" class="h-13 w-20" />
+        </div>
+        <h1 class="text-3xl font-extrabold text-center mb-8">News‑Generator</h1>
+        <!-- لِی‌اوت دو ستونه → در موبایل ستونی -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- ⭐ ستونی که پیش‌نمایش را استیکی نگه می‌دارد -->
+            <section class="lg:w-1/2 flex-shrink-0 space-y-6 sticky lg:static top-6">
+                <!-- آپلود عکس -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium">آپلود عکس</label>
+                    <input id="imgInput" type="file" accept="image/*"
+                        class="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                </div>
+
+                <!-- پیش‌نمایش نهایی -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium">پیش‌نمایش نهایی (1080×1080)</label>
+                    <div class="relative w-full pb-[100%] bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                        <canvas id="previewCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                    </div>
+                </div>
+
+                <button id="downloadBtn"
+                    class="w-full py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition">
+                    دانلود تصویر
+                </button>
+            </section>
+
+            <!-- ⭐ ستون کنترل‌ها و لیست متون -->
+            <section class="flex-1 space-y-8 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 hide-scrollbar">
+                <!-- کنترل‌های متن و تصویر -->
+                <div class="bg-gray-50 p-6 rounded-2xl shadow-lg space-y-6">
+                    <h2 id="formTitle" class="text-2xl font-semibold text-gray-800">
+                        افزودن یا ویرایش متن
+                    </h2>
+
+                    <!-- فیلد متن و wordControls -->
+                    <div class="flex flex-col space-y-4">
+                        <div>
+                            <label for="textInput" class="mb-1 block text-sm font-medium text-gray-700">متن</label>
+                            <textarea id="textInput" rows="4" placeholder="متن خود را وارد کنید…"
+                                class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-300 transition resize-none"></textarea>
+                        </div>
+
+                        <!-- wordControls با ستون واکنش‌گرا -->
+                        <div id="wordControls" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                    </div>
+
+                    <!-- سایر کنترل‌ها → دو ستونه -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- فونت -->
+                        <div class="flex flex-col">
+                            <label for="fontSelect" class="mb-1 text-sm font-medium text-gray-700">فونت</label>
+                            <select id="fontSelect"
+                                class="bg-white border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-300 transition">
+                                <option value="sans-serif">بدون‌فونت</option>
+                                <option value="InterNational">اینترنشنال</option>
+                            </select>
+                        </div>
+
+                        <!-- رنگ متن -->
+                        <div class="flex flex-col">
+                            <label for="colorInput" class="mb-1 text-sm font-medium text-gray-700">رنگ متن</label>
+                            <input id="colorInput" type="color" value="#ffffff"
+                                class="w-12 h-12 p-0 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                        </div>
+
+                        <!-- رنگ سایه -->
+                        <div class="flex flex-col">
+                            <label for="shadowColorInput" class="mb-1 text-sm font-medium text-gray-700">رنگ
+                                سایه</label>
+                            <input id="shadowColorInput" type="color" value="#000000"
+                                class="w-12 h-12 p-0 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                        </div>
+
+                        <!-- فاصله بین خطوط / همون sizeInput که از قبل داشتی -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-medium text-gray-700 mb-1">فاصله بین خطوط</label>
+                            <div class="flex items-center border border-gray-200 rounded-full overflow-hidden">
+                                <button data-action="decrement" data-target="sizeInput"
+                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition">
+                                    −
+                                </button>
+                                <input id="sizeInput" type="number" min="10" max="200" value="32"
+                                    class="flex-1 text-center bg-transparent focus:outline-none px-2" />
+                                <button data-action="increment" data-target="sizeInput"
+                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- رِنج‌ها و آفست‌ها: سه تایی در یک grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <!-- offsetX -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-medium text-gray-700 mb-1">سایه متن افقی</label>
+                            <input id="shadowOffsetXInput" type="number" value="0"
+                                class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 text-center" />
+                        </div>
+                        <!-- offsetY -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-medium text-gray-700 mb-1">سایه متن عمودی</label>
+                            <input id="shadowOffsetYInput" type="number" value="0"
+                                class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 text-center" />
+                        </div>
+                        <!-- blur -->
+                        <div class="flex flex-col">
+                            <label class="text-sm font-medium text-gray-700 mb-1">بلور سایه متن</label>
+                            <input id="shadowBlurInput" type="number" value="0"
+                                class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 text-center" />
+                        </div>
+                    </div>
+
+                    <!-- سه رِنجِ طولِ سایه/شدت/مِیلِه -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="flex flex-col">
+                            <label for="shadowTopRange" class="text-sm font-medium text-gray-700 mb-1">سایه تصویر از
+                                بالا (%)</label>
+                            <input id="shadowTopRange" type="range" min="0" max="50" value="20"
+                                class="accent-gray-500" />
+                            <small class="text-gray-500 mt-1 text-left">ارتفاع: <span
+                                    id="shadowTopValue">20</span>%</small>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="shadowBottomRange" class="text-sm font-medium text-gray-700 mb-1">سایه تصویر از
+                                پایین
+                                (%)</label>
+                            <input id="shadowBottomRange" type="range" min="0" max="50" value="20"
+                                class="accent-gray-500" />
+                            <small class="text-gray-500 mt-1 text-left">ارتفاع: <span
+                                    id="shadowBottomValue">20</span>%</small>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="shadowIntensityRange" class="text-sm font-medium text-gray-700 mb-1">شدت سایه
+                                تصویر
+                                (%)</label>
+                            <input id="shadowIntensityRange" type="range" min="0" max="100" value="50"
+                                class="accent-gray-500" />
+                            <small class="text-gray-500 mt-1 text-left">شدت: <span
+                                    id="shadowIntensityValue">50</span>%</small>
+                        </div>
+                    </div>
+
+                    <!-- ارتفاع میله -->
+                    <div class="flex flex-col">
+                        <label for="mileHeightRange" class="text-sm font-medium text-gray-700 mb-1">ارتفاع میله</label>
+                        <input id="mileHeightRange" type="range" min="10" max="1080" value="120"
+                            class="accent-gray-500" />
+                        <small class="text-gray-500 mt-1">ارتفاع: <span id="mileHeightValue">120</span>px</small>
+                    </div>
+
+                    <!-- دکمهٔ افزودن / بروزرسانی -->
+                    <button id="addTextBtn"
+                        class="w-full py-3 bg-black text-white font-medium rounded-xl hover:bg-gray-800 transition">
+                        افزودن / بروزرسانی متن
+                    </button>
+                </div>
+
+                <!-- لیست متونِ ذخیره‌شده -->
+                <ul id="textsList" class="space-y-2"></ul>
+            </section>
+        </div>
+    </main>
+
+    <!-- مدال کراپ: بیرونِ main تا روی همه چیز قرار گیرد -->
+    <div id="cropModal" class="fixed inset-0 hidden z-[200] bg-gray-900/70 flex items-center justify-center p-4">
+        <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-lg font-bold">انتخاب ناحیهٔ کراپ</h2>
+                <button id="cropCancelBtn" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+            <div class="h-[60vh] overflow-hidden p-0">
+                <img id="imageToCrop" class="h-full w-full object-contain" alt="برای کراپ اینجا کلیک کنید" />
+            </div>
+            <div class="flex justify-end gap-3 p-4 border-t">
+                <button id="cropConfirmBtn"
+                    class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition">
+                    اعمال کراپ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- اسکریپت‌ها -->
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
+    <script src="{% static 'assets/js/app.js' %}"></script>
+</body>
+
+</html>

@@ -100,3 +100,6 @@ def prices_api(request):
         }
         cache.set('latest_prices', data, timeout=30)
     return JsonResponse(data)
+
+def editor(request):
+    return render(request, "prices/editor.html")

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u&ca=oh1*5d$!nlpa9a0^yir(qc2$unmez@0xe4o3^i=@h41h9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tradelook.ir', 'www.tradelook.ir', '127.0.0.1']
 
 
 # Application definition

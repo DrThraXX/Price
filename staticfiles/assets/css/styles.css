@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "InterNational";
+    src: url("../fonts/Epic\ Iranintl-ExtraBold.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'InterNational', sans-serif;
+}
+
+/* محدود کردن اندازه‌ی کانتینر کراپ */
+/* این را نگه دارید یا اضافه کنید */
+#cropModal .cropper-container {
+    max-height: 60vh;
+    overflow: hidden;
+}
+
+#cropModal .cropper-container .cropper-view-box,
+#cropModal .cropper-container .cropper-face {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* کارت متن */
+.text-card {
+    @apply flex items-center justify-between bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition;
+}
+
+.text-card span {
+    @apply text-gray-900 font-medium truncate;
+}
+
+.text-card button {
+    @apply w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition;
+}
+
+#previewCanvas:focus {
+    outline: none;
+}
+
+.font-test {
+    font-family: "InterNational", sans-serif;
+}

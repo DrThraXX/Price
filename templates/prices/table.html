@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>گزارش قیمت لحظه‌ای</title>
-
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     crossorigin="anonymous">
@@ -15,26 +15,50 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"
     crossorigin="anonymous">
 
-  <!-- Vazir Font -->
-  <link rel="preload" href="{% static 'fonts/Vazirmatn-Regular.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <!-- IranYekan Font -->
+  <link rel="preload" href="{% static 'fonts/iranyekanwebbold(fanum).woff2' %}" as="font" type="font/woff2" crossorigin>
   <style>
     @font-face {
-      font-family: 'Vazir';
-      src: url("{% static 'fonts/Vazirmatn-Regular.woff2' %}") format('woff2');
+      font-family: 'IranYekan';
+      src: url("{% static 'fonts/iranyekanwebbold(fanum).woff2' %}") format('woff2');
       font-weight: normal;
       font-style: normal;
-      font-display: swap;
+      font-display: auto;
     }
 
     a[href*="tgju.org"] {
       display: none !important;
     }
 
+    .tgju-widget-box {
+      display: block !important;
+      font-family: 'IranYekan';
+    }
+
     body {
-      font-family: 'Vazir', Tahoma, Arial, sans-serif;
+      font-family: 'IranYekan';
       background-color: #f1f3f5;
       color: #343a40;
       margin: 0;
+    }
+
+    .tgju-widget-title-text {
+      font-size: 20px !important;
+    }
+
+    .tgju-widget-current-price {
+      flex-grow: 1;
+      text-align: left;
+      font-size: 20px !important;
+      font-weight: 500;
+      padding-top: 3px;
+    }
+
+    .tgju-widget-box .tgju-widget-change .widget-change-price {
+      font-size: 15px !important;
+      margin-right: 8px;
+      position: relative;
+      top: 0;
     }
 
     .navbar {
@@ -51,6 +75,44 @@
       border-radius: .75rem;
       overflow: hidden;
 
+    }
+
+    .highcharts-axis-title,
+    .highcharts-axis-labels.highcharts-xaxis-labels,
+    .highcharts-title,
+    .highcharts-axis-labels.highcharts-yaxis-labels {
+      font-family: 'IranYekan' !important;
+      fill: black;
+      color: black;
+    }
+
+    .highcharts-title {
+      font-size: 20px !important;
+      fill: black;
+      color: black;
+    }
+
+    text.highcharts-title {
+      font-family: iranyekan !important;
+      font-size: 20px !important;
+      fill: black;
+      color: black;
+    }
+
+    body,
+    .section-header,
+    .highcharts-title,
+    .highcharts-subtitle,
+    .highcharts-axis-title,
+    .highcharts-tooltip text {
+      font-family: 'IranYekan' !important;
+    }
+
+    .highcharts-axis-title,
+    .highcharts-axis-labels.highcharts-xaxis-labels,
+    .highcharts-title,
+    .highcharts-axis-labels.highcharts-yaxis-labels {
+      font-family: iranyekan !important;
     }
 
     .section-header {
@@ -86,6 +148,19 @@
       position: relative;
     }
 
+    .card.section-card {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .card.section-card .card-header {
+      border: none !important;
+      border-top: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      padding-bottom: 0;
+    }
+
     .tgju-wrapper .overlay-logo {
       position: absolute;
       top: 6px;
@@ -98,18 +173,47 @@
       background: rgba(255, 255, 255, 0.0);
       border-radius: 4px;
     }
-  .tgju-wrapper .custom-widget-title {
-  position: absolute;
-  top: 6px;
-  right: 6px; /* چون راست‌به‌چپ هستی، عنوان سمت راست باشه */
-  background: rgba(255,255,255,0.85);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 1rem;
-  z-index: 10;
-  white-space: nowrap;
-}
+
+    .card.section-card {
+      border: none !important;
+      /* حذف هر نوع خط بیرونی */
+      border-radius: .75rem;
+      overflow: hidden;
+    }
+
+    .card.section-card .card-header {
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      padding-bottom: 0;
+    }
+
+    .card.section-card .card-header::before,
+    .card.section-card .card-header::after {
+      display: none !important;
+    }
+
+    .card.section-card .card-header .section-header {
+      border: none !important;
+    }
+
+    .section-header::before {
+      content: none !important;
+    }
+
+    .tgju-wrapper .custom-widget-title {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      /* چون راست‌به‌چپ هستی، عنوان سمت راست باشه */
+      background: rgba(255, 255, 255, 0.85);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      z-index: 10;
+      white-space: nowrap;
+    }
   </style>
 </head>
 
@@ -118,6 +222,7 @@
     <div class="container">
       <a class="navbar-brand mx-auto" href="#">
         <i class="fas fa-chart-line"></i> گزارش قیمت لحظه‌ای
+        <a class="btn btn-sm btn-light ms-2" href="{% url 'prices:editor' %}">ویرایشگر پیشرفته</a>
       </a>
     </div>
   </nav>
@@ -134,10 +239,15 @@
           </div>
           <div class="card-body text-center">
             <div class="tgju-wrapper">
-              <tgju type="market-overview" items="398097,398096,535605,398115,398102" columns="dot" token="webservice">
-              </tgju>
+              <tgju type="market-overview" items="137203,137205,137206,137207,137225" columns="dot" token="webservice"
+                styles='{
+		"loading": "#000000",
+		"border": "#ffffff",
+		"title": "#000000",
+		"price": "#000000",
+		"copyright_fix_text": "#000000"
+	}'></tgju>
             </div>
-            <script src="https://api.tgju.org/v1/widget/v2" defer></script>
           </div>
         </div>
       </div>
@@ -156,9 +266,14 @@
             </div>
           </div>
           <div class="card-body text-center">
-            <tgju type="market-overview" items="137203,137205,137206,137207,137225" columns="dot" token="webservice">
-            </tgju>
-            <script src="https://api.tgju.org/v1/widget/v2" defer></script>
+            <tgju type="market-overview" items="398096,398097,535605,398115,398102" columns="dot" token="webservice"
+              styles='{
+		"loading": "#000000",
+		"border": "#ffffff",
+		"title": "#000000",
+		"price": "#000000",
+		"copyright": "#000000"
+	}'></tgju>
           </div>
         </div>
       </div>
@@ -174,29 +289,14 @@
             </div>
           </div>
           <div class="card-body text-center">
-<tgju
-	type="market-overview"
-	items="137222,137221,137217,137218,137215"
-	columns="dot"
-	token="webservice"
-></tgju>
-<script src="https://api.tgju.org/v1/widget/v2" defer></script>
-            <script src="https://api.tgju.org/v1/widget/v2" defer></script>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <div class="card section-card shadow-sm">
-          <div class="card-header bg-white">
-            <div class="d-flex justify-content-between align-items-center section-header">
-              <div class="d-flex align-items-center">
-              </div>
-
-            </div>
-          </div>
-          <div class="card-body text-center">
-            <tgju type="market-overview" items="137138,137137,137139,137140,137141" columns="dot" token="webservice">
+            <tgju type="market-overview" items="137222,137221,137217,137218,137215" columns="dot" token="webservice"
+              styles='{
+		"loading": "#000000",
+		"border": "#ffffff",
+		"title": "#000000",
+		"price": "#000000",
+		"copyright": "#000000"
+	}'>
             </tgju>
           </div>
         </div>
@@ -212,8 +312,39 @@
             </div>
           </div>
           <div class="card-body text-center">
-            <tgju type="market-overview" items="137119,137123,137120,137121,137122" columns="dot" token="webservice">
+            <tgju type="market-overview" items="137138,137137,137139,137140,137141" columns="dot" token="webservice"
+              styles='{
+		"loading": "#000000",
+		"border": "#ffffff",
+		"title": "#000000",
+		"price": "#000000",
+		"copyright": "#000000"
+	}'>
             </tgju>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="card section-card shadow-sm">
+          <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center section-header">
+              <div class="d-flex align-items-center">
+              </div>
+
+            </div>
+          </div>
+          <div class="card-body text-center">
+            <tgju type="market-overview" items="137119,137123,137120,137121,137122" columns="dot" token="webservice"
+              styles='{
+		"loading": "#000000",
+		"border": "#ffffff",
+		"title": "#000000",
+		"price": "#000000",
+		"copyright": "#000000"
+	}'>
+            </tgju>
+
           </div>
         </div>
       </div>
@@ -225,7 +356,9 @@
   <footer class="text-center py-3">
     <small>&copy; {% now "Y" %} کلیک | همه حقوق محفوظ است.</small>
   </footer>
-  <script>
+  <script type="module">
+    import { toPng } from 'https://cdn.jsdelivr.net/npm/html-to-image@1.10.10/+esm';
+
     window.addEventListener('load', () => {
       // حذف کامل "By" و لینک‌های TGJU هنگام لود اولیه
       document.querySelectorAll('a[href*="tgju.org"]').forEach(a => {
@@ -235,104 +368,229 @@
         a.remove();
       });
 
-      // اضافه کردن دکمه‌ی دانلود به هر کارت
       document.querySelectorAll('.card.section-card').forEach(card => {
-        
         const btn = document.createElement('button');
         btn.textContent = 'دانلود کارت';
+        btn.setAttribute('aria-label', 'دانلود کارت قیمت لحظه‌ای');
         btn.className = 'btn btn-sm btn-primary mt-2';
         card.querySelector('.card-body').appendChild(btn);
 
         btn.addEventListener('click', async () => {
-          // ۱) مخفی کردن دکمه
-          btn.style.visibility = 'hidden';
+          btn.disabled = true;
 
-          // ۲) کمی تأخیر برای رندر کامل ویجت‌ها
+          // صبر برای لود کامل فونت‌ها و ویجت‌ها
+          await document.fonts.ready;
           await new Promise(r => setTimeout(r, 600));
 
-          // ۳) حذف موقت متن "By" (اگر لازم بود)
+          // حذف موقت "By"
           const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, {
             acceptNode(node) {
-              return /^\s*By\b/.test(node.nodeValue)
+              return node.nodeValue?.includes('نمودار') || /^By\b/.test(node.nodeValue)
                 ? NodeFilter.FILTER_ACCEPT
                 : NodeFilter.FILTER_SKIP;
             }
           });
-          const toRemove = [];
-          while (walker.nextNode()) toRemove.push(walker.currentNode);
-          toRemove.forEach(txtNode => txtNode.nodeValue = '');
 
-          // ۴) تنظیم فونت (در صورت نیاز)
-          card.style.fontFamily = "'Vazir', Tahoma, Arial, sans-serif";
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            node.nodeValue = node.nodeValue
+              .replace(/\bBy\b/g, '')       // فقط "By" کامل رو حذف کن
+              .replace(/نمودار/g, '');      // همهٔ "نمودار"ها رو حذف کن
+          }
 
-          // ۵) کپچر کارت با رزولوشن کافی
-          // برای حفظ جزئیات، scale را بالاتر می‌گیریم؛ اما خروجی نهایی 1080x1080 خواهد بود.
-          const rawCanvas = await html2canvas(card, {
-            scale: Math.min(3, window.devicePixelRatio * 2),
-            backgroundColor: null,
-            useCORS: true,
-            allowTaint: true,
-            ignoreElements: el => el === btn
-          });
+          // مخفی کردن دکمه تا توی کپچر نیافته
+          const prevVisibility = btn.style.visibility;
+          btn.style.visibility = 'hidden';
 
-          // ۶) ساخت canvas نهایی 1080x1080
-          const finalSize = 1080;
-          const squareCanvas = document.createElement('canvas');
-          squareCanvas.width = finalSize;
-          squareCanvas.height = finalSize;
-          const ctx = squareCanvas.getContext('2d');
+          try {
+            function enforceTitleSize(card) {
+              // اعمال inline style به عنوان‌ها
+              card.querySelectorAll('text.highcharts-title').forEach(t => {
+                t.setAttribute('font-size', '20px');
+                t.style.setProperty('font-size', '20px', 'important');
+                t.style.setProperty('font-family', "'IranYekan'", 'important');
+                t.style.setProperty('fill', '#000', 'important');
+                t.style.setProperty('color', '#000', 'important');
 
-          // پس‌زمینه سفید
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, finalSize, finalSize);
 
-          // کشیدن کارت اصلی با حفظ نسبت و مرکزی کردن
-          const cw = rawCanvas.width;
-          const ch = rawCanvas.height;
-          const scale = Math.min(finalSize / cw, finalSize / ch);
-          const drawW = cw * scale;
-          const drawH = ch * scale;
-          const offsetX = (finalSize - drawW) / 2;
-          const offsetY = (finalSize - drawH) / 2;
-          ctx.drawImage(rawCanvas, 0, 0, cw, ch, offsetX, offsetY, drawW, drawH);
+                const cs = window.getComputedStyle(t);
+                const mappings = {
+                  'font-weight': cs.getPropertyValue('font-weight'),
+                  'letter-spacing': cs.getPropertyValue('letter-spacing'),
+                  'text-anchor': t.getAttribute('text-anchor') || 'middle'
+                };
+                for (const [prop, val] of Object.entries(mappings)) {
+                  if (val) {
+                    t.style.setProperty(prop, val, 'important');
+                  }
+                }
+              });
 
-          // اضافه کردن لوگوی کوچک واضح دقیقاً کنارِ چارت (سمت چپ، وسط‌به‌وسط)
-          const logo = new Image();
-          logo.src = "{% static 'images/logo.png' %}";
-          logo.crossOrigin = "anonymous";
-          await new Promise(res => {
-            logo.onload = res;
-            logo.onerror = res; // اگر لود نشد، بی‌خیال شو
-          });
-          const logoHeight = 120; // بزرگ‌تر
-          const logoWidth = logo.naturalWidth * (logoHeight / logo.naturalHeight);
-          const margin = 90; // فاصله از بالا و چپ
-          const logoX = margin;
-          const logoY = margin; // بالا قرار می‌گیره
-          ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+              // اعمال رنگ مشکی به برچسب‌های محور (مثلاً سال‌ها)
+              card.querySelectorAll(
+                'g.highcharts-xaxis-labels text, g.highcharts-yaxis-labels text, text.highcharts-axis-title'
+              ).forEach(lbl => {
+                lbl.style.setProperty('fill', '#000', 'important');
+                lbl.style.setProperty('color', '#000', 'important');
+                lbl.style.setProperty('font-family', "'IranYekan'", 'important');
+                // اگر لازم بود اندازه رو هم تنظیم کن (مثلاً برای سال‌ها کوچک‌تر باشه، این خط رو حذف یا تغییر بده)
+                // lbl.style.setProperty('font-size', '12px', 'important');
+              });
 
-          // ۷) بازگرداندن دکمه
-          btn.style.visibility = '';
+              // تزریق CSS محافظ داخل هر SVG برای پوشش جامع‌تر
+              card.querySelectorAll('svg').forEach(svg => {
+                let styleTag = svg.querySelector('style.enforce-title-size');
+                if (!styleTag) {
+                  styleTag = document.createElement('style');
+                  styleTag.className = 'enforce-title-size';
+                  svg.prepend(styleTag);
+                }
+                styleTag.textContent = `
+      text.highcharts-title {
+        font-size: 20px !important;
+        font-family: 'IranYekan' !important;
+        fill: #000 !important;
+        color: #000 !important;
+      }
+      g.highcharts-xaxis-labels text,
+      g.highcharts-yaxis-labels text,
+      text.highcharts-axis-title {
+        fill: #000 !important;
+        color: #000 !important;
+        font-family: 'IranYekan' !important;
+      }
+    `;
+              });
+            }
+            enforceTitleSize(card);
+            await new Promise(r => setTimeout(r, 50));
+            enforceTitleSize(card);
+            await new Promise(r => setTimeout(r, 100));
+            enforceTitleSize(card);
+            const originalWidth = card.style.width;
+            card.style.width = '600px';
+            card.style.maxWidth = 'none';
 
-          // ۸) دانلود خروجی مربعی
-          const link = document.createElement('a');
-          const titleEl = card.querySelector('.section-header span');
-          const title = titleEl
-            ? titleEl.textContent.trim().replace(/\s+/g, '_')
-            : 'card';
-          link.download = `${title}_1080x1080.png`;
-          link.href = squareCanvas.toDataURL('image/png');
-          link.click();
+            // فورس کردن چارت‌ها داخل کارت (بدون اتکا به Highcharts API اگر sandboxed باشه)
+            function forceInnerChartWidth(card, width = 600) {
+              // نسخه ساده روی SVG یا کانتینرهای های‌چارت
+              card.querySelectorAll('svg.highcharts-root, .highcharts-container').forEach(el => {
+                el.dataset._origWidth = el.style.width || '';
+                el.style.width = width + 'px';
+                el.style.maxWidth = 'none';
+              });
+
+              // اگر به Highcharts دسترسی داری، دقیق‌تر بزن
+              if (window.Highcharts && Array.isArray(Highcharts.charts)) {
+                Highcharts.charts.forEach(chart => {
+                  if (!chart || !chart.renderTo) return;
+                  if (card.contains(chart.renderTo)) {
+                    chart._origRenderToWidth = chart.renderTo.style.width || '';
+                    chart.renderTo.style.width = width + 'px';
+                    if (chart.container && chart.container.style) {
+                      chart.container.style.width = width + 'px';
+                    }
+                    chart.reflow();
+                  }
+                });
+              }
+            }
+
+            function restoreInnerChartWidth(card) {
+              card.querySelectorAll('svg.highcharts-root, .highcharts-container').forEach(el => {
+                if (el.dataset._origWidth !== undefined) {
+                  el.style.width = el.dataset._origWidth;
+                  delete el.dataset._origWidth;
+                }
+              });
+              if (window.Highcharts && Array.isArray(Highcharts.charts)) {
+                Highcharts.charts.forEach(chart => {
+                  if (!chart || !chart.renderTo) return;
+                  if (card.contains(chart.renderTo) && chart._origRenderToWidth !== undefined) {
+                    chart.renderTo.style.width = chart._origRenderToWidth;
+                    if (chart.container && chart.container.style) {
+                      chart.container.style.width = chart._origRenderToWidth;
+                    }
+                    delete chart._origRenderToWidth;
+                    chart.reflow();
+                  }
+                });
+              }
+            }
+
+            // اجرا قبل از کپچر
+            forceInnerChartWidth(card, 600);
+
+            // کپچر
+            const dataUrl = await toPng(card, {
+              cacheBust: true,
+              backgroundColor: '#ffffff',
+              pixelRatio: 3,
+            });
+
+            // بازگرداندن حالت قبلی
+            restoreInnerChartWidth(card);
+            card.style.width = originalWidth;
+            // ساخت Image از dataUrl
+            const img = new Image();
+            img.src = dataUrl;
+            await new Promise(r => (img.onload = r));
+
+            // آماده‌سازی canvas نهایی 1080x1080
+            const finalSize = 1080;
+            const squareCanvas = document.createElement('canvas');
+            squareCanvas.width = finalSize;
+            squareCanvas.height = finalSize;
+            const ctx = squareCanvas.getContext('2d');
+
+            // پس‌زمینه سفید
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, finalSize, finalSize);
+
+            // proportional scale کارت داخل مربع
+            const scale = Math.min(finalSize / img.width, finalSize / img.height);
+            const drawW = img.width * scale;
+            const drawH = img.height * scale;
+            const offsetX = (finalSize - drawW) / 2;
+            const offsetY = (finalSize - drawH) / 2;
+            ctx.drawImage(img, 0, 0, img.width, img.height, offsetX, offsetY, drawW, drawH);
+
+            // اضافه کردن لوگو (با fallback اگر نیاد)
+            const logo = new Image();
+            logo.src = "{% static 'images/logo.png' %}";
+            logo.crossOrigin = "anonymous";
+            await new Promise(res => {
+              logo.onload = res;
+              logo.onerror = res;
+            });
+            if (logo.naturalHeight) {
+              const desiredLogoHeight = 110;
+              const logoScale = desiredLogoHeight / logo.naturalHeight;
+              const logoW = logo.naturalWidth * logoScale;
+              ctx.drawImage(logo, 100, 30, logoW, desiredLogoHeight);
+            }
+
+            // ساخت نام فایل
+            const titleEl = card.querySelector('.section-header span');
+            const title = titleEl
+              ? titleEl.textContent.trim().replace(/\s+/g, '_')
+              : 'card';
+            const link = document.createElement('a');
+            link.download = `${title}_1080x1080.png`;
+            link.href = squareCanvas.toDataURL('image/png');
+            link.click();
+          } catch (e) {
+            console.error('خطا در ساخت تصویر کارت:', e);
+          } finally {
+            // برگردوندن دکمه
+            btn.style.visibility = prevVisibility;
+            btn.disabled = false;
+          }
         });
       });
     });
+
   </script>
-
-
-
-
-
-
   <!-- اسکریپت‌های لازم -->
   <script src="https://api.tgju.org/v1/widget/v2" defer></script>
 </body>
